@@ -1,0 +1,67 @@
+var fft;
+var song;
+
+
+function preload() {
+// song = loadSound("mario.mp3");
+  song = loadSound("giantsteps.m4a");
+//  song = loadSound("oceaneyes.mp3");
+
+}
+
+function setup() {
+  
+  createCanvas(windowWidth, windowHeight);
+  angleMode(DEGREES);
+  background(255);
+  song.play();
+  amp = new p5.Amplitude();
+  fft = new p5.FFT(0.9,32);
+  
+  
+}
+
+
+function draw() {
+  
+  var vol = amp.getLevel();
+  var spectrum = fft.analyze();
+//  volhistory.push(vol);
+  stroke(40);
+// giant steps
+  let f = ["#ffca66", "#f281a4", "#018b86", "#7791ca", "#ef4823", 255];
+//mario
+//   let f = ["#FE0002", "#0001FC", "#FFD987", "#6A0400", 255, 0];
+  let ra = random(f);
+  stroke(0);
+//ocean
+// stroke (10,15);
+//  noFill();
+  fill(ra);
+  
+  translate(width/2, height/2);
+  beginShape();
+  for (var i = 0; i < spectrum.length; i++) {
+    var ang = map(i, 0, spectrum.length, 0, 360);
+    var lim = map(vol, 0, 1, 0, min(windowHeight, windowWidth));
+    var spec = spectrum[i];
+    let w = lim*1.4;
+    var r = map(spec, 0, 256, lim/5 , min(w, windowWidth));
+//    var out = 200 * noise(i, amp);
+    var x = r * cos(ang);
+    var y = r * sin(ang);
+    curveVertex(x, y);
+  }
+  endShape(CLOSE);
+  
+  
+//  mario 100
+//giantsteps 160
+  // ocean 200
+  if (frameCount % 160 == 0) {
+	background(ra);
+//ocean
+// background (255);
+
+}
+}
