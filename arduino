@@ -1,0 +1,104 @@
+// Sensor pins
+#define sensorPower 7
+#define sensorPin A0
+#define sensePower 4
+#define sensePin A1
+
+// Value for storing water level
+int val = 0;
+int val1 = 1;
+int LED = 2;
+int LED1 = 3;
+
+boolean LEDon = true;
+
+int input;
+int input1;
+
+void setup() {
+  
+  pinMode(sensorPower, OUTPUT);
+  pinMode(sensePower, OUTPUT);
+    pinMode(LED, INPUT);
+  pinMode(LED, OUTPUT);
+    pinMode(LED1, INPUT);
+  pinMode(LED1, OUTPUT);
+  
+  digitalWrite(sensorPower, LOW);
+  digitalWrite(sensePower, LOW);
+  digitalWrite(LED, LOW);
+  digitalWrite(LED1, LOW);
+  
+  Serial.begin(9600);
+
+
+//moderator ask person A for value between 0 and 100.
+    input = 30;  
+    
+
+//moderator ask person B for value between 0 and 100.
+    input1 = 87;  
+
+       
+}
+
+
+
+
+void loop() {
+  //get the reading from the function below and print it
+int level = readSensor();
+
+  if (val >= input+5){
+     digitalWrite(LED,LOW);
+  }
+     else if (val >= input-5){
+     digitalWrite(LED,HIGH);
+
+     }
+
+     else {
+      digitalWrite(LED, LOW);
+     }
+     
+ if (val1 >= input1+5){
+     digitalWrite(LED1,LOW);
+  }
+     else if (val1 >= input1-5){
+     digitalWrite(LED1,HIGH);
+
+     }
+
+     else {
+      digitalWrite(LED1, LOW);
+     }
+
+         delay(100);
+digitalWrite(LED, LOW);
+  digitalWrite(LED1, LOW);
+  
+}
+
+//This is a function used to get the reading
+int readSensor() {
+  digitalWrite(sensorPower, HIGH);  
+  delay(50);              
+  val = analogRead(sensorPin);    
+  digitalWrite(sensorPower, LOW);   
+
+  
+  digitalWrite(sensePower, HIGH);  
+  delay(50);              
+  val1 = analogRead(sensePin);    
+  digitalWrite(sensePower, LOW);   
+
+//calibrate before conducting
+   val = map(val, 70, 220, 0, 100);
+              Serial.println(val);
+              val1 = map(val1, 80, 210, 0, 100);
+    Serial.println (val1);
+  return val;             
+    return val1;             
+
+
+}
