@@ -1,0 +1,50 @@
+int PulseSensorPurplePin = A0;  //heartrate sensor
+int Signal;
+int expspeed;
+int Signalspeed;
+int clockspeed;
+
+int clockA = 2;          // Set these to the pin numbers you have attached the clock wires
+int clockB = 3;          // to.  Order is not important.
+int tickPin = clockA;    // This keeps track of which clock pin should be fired next.
+
+
+void setup() {
+
+pinMode(clockA,OUTPUT) ;    
+pinMode(clockB,OUTPUT) ;  
+
+ digitalWrite(clockA, LOW);
+ digitalWrite(clockB, LOW);
+ 
+  Serial.begin(9600);
+}
+
+//one tick
+void loop(){
+
+//pulse control
+ Signal = analogRead(PulseSensorPurplePin);  // get a new reading
+ Serial.println(Signal);
+ Signalspeed = map(Signal, 400, 800, 20, 40);  //callibration necessary
+ expspeed = pow(Signalspeed, 2);
+ clockspeed = map(expspeed, 400, 1600, -750, -400);
+  
+  // Energize the electromagnet in the correct direction.
+  digitalWrite(tickPin, HIGH);
+  delay(10);
+  digitalWrite(tickPin, LOW);  
+ 
+  // Switch the direction so it will fire in the opposite way next time.
+  if (tickPin == clockA)
+  {
+    tickPin = clockB;
+  } else {
+    tickPin = clockA;
+  }
+
+
+    delay(800 + clockspeed);
+}
+
+  
